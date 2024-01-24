@@ -301,6 +301,7 @@ static pid_t winpid(Window w);
 
 /* variables */
 static Systray *systray = NULL;
+static Client *lastfocused = NULL;
 static const char broken[] = "broken";
 static char stext[256];
 static int screen;
@@ -1044,7 +1045,11 @@ focus(Client *c)
 		detachstack(c);
 		attachstack(c);
 		grabbuttons(c, 1);
+		/* set new focused border first to avoid flickering */
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		/* lastfocused may be us if another window was unmanaged */
+		if (lastfocused && lastfocused != c)
+			XSetWindowBorder(dpy, lastfocused->win, scheme[SchemeNorm][ColBorder].pixel);
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -1455,7 +1460,7 @@ movemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / 165))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -1669,7 +1674,7 @@ resizemouse(const Arg *arg)
 			handler[ev.type](&ev);
 			break;
 		case MotionNotify:
-			if ((ev.xmotion.time - lasttime) <= (1000 / 60))
+			if ((ev.xmotion.time - lasttime) <= (1000 / 165))
 				continue;
 			lasttime = ev.xmotion.time;
 
@@ -2277,7 +2282,7 @@ unfocus(Client *c, int setfocus)
 	if (!c)
 		return;
 	grabbuttons(c, 0);
-	XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
+	lastfocused = c;
 	if (setfocus) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
@@ -2318,6 +2323,8 @@ unmanage(Client *c, int destroyed)
 		XSetErrorHandler(xerror);
 		XUngrabServer(dpy);
 	}
+        if (lastfocused == c)
+                lastfocused = NULL;
 	if (scratchpad_last_showed == c)
 		scratchpad_last_showed = NULL;
 	free(c);
