@@ -37,7 +37,8 @@ static const Rule rules[] = {
 	 */
 	/* class     instance  title           tags mask  isfloating  isterminal  noswallow  monitor */
 	{ "Gimp",    NULL,     NULL,           0,         1,          0,           0,        -1 },
-	{ "Firefox", NULL,     NULL,           1 << 8,    0,          0,          -1,        -1 },
+	{ "firefox", NULL,     NULL,           0,         0,          1,          -1,        -1 },
+	{ "firefox", "Library",NULL,           0,         0,          0,           0,        -1 },
 	{ "st",      NULL,     NULL,           0,         0,          1,           0,        -1 },
 	{ NULL,      NULL,     "Event Tester", 0,         0,          0,           1,        -1 }, /* xev */
 };
@@ -112,6 +113,9 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_p,      quit,           {0} },
+        { MODKEY,                       XK_s,      scratchpad_show,{0} },
+        { MODKEY|ShiftMask,             XK_s,      scratchpad_hide,{0} },
+        { MODKEY,                       XK_grave,  scratchpad_remove,{0} },
 	{ 0,                       	XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
 	{ 0,                       	XF86XK_AudioMute, spawn, {.v = mutevol } },
 	{ 0,                       	XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
