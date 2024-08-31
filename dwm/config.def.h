@@ -12,8 +12,8 @@ static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display 
 static const int showsystray        = 1;        /* 0 means no systray */
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=8" };
-static const char dmenufont[]       = "monospace:size=8";
+static const char *fonts[]          = { "monospace:size=11" };
+static const char dmenufont[]       = "monospace:size=12";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -72,6 +72,8 @@ static const char *termcmd[]  = { "st", NULL };
 static const char *upvol[]    = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "10%+",      NULL };
 static const char *downvol[]  = { "/usr/bin/wpctl",   "set-volume", "@DEFAULT_AUDIO_SINK@",      "10%-",      NULL };
 static const char *mutevol[]  = { "/usr/bin/wpctl",   "set-mute",   "@DEFAULT_AUDIO_SINK@",      "toggle",    NULL };
+static const char *brupcmd[]  = { "brightnessctl", "set", "10%+", NULL };
+static const char *brdowncmd[] = { "brightnessctl", "set", "10%-", NULL };
 
 #include "movestack.c"
 static const Key keys[] = {
@@ -116,6 +118,8 @@ static const Key keys[] = {
 	{ 0,                       	XF86XK_AudioRaiseVolume, spawn, {.v = upvol   } },
 	{ 0,                       	XF86XK_AudioLowerVolume, spawn, {.v = downvol } },
 	{ 0,                       	XF86XK_AudioMute, spawn, {.v = mutevol } },
+	{ 0, XF86XK_MonBrightnessUp,    spawn, {.v = brupcmd} },
+        { 0, XF86XK_MonBrightnessDown,  spawn, {.v = brdowncmd} },
 };
 
 /* button definitions */
